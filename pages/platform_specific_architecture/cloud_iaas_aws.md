@@ -61,7 +61,7 @@ The _Primary private IP address_ on the same interface is not involved in this c
 **SAP HANA outbound network communication**
 
 In contrast to an inbound connection, when SAP HANA instance initiates a network connection to a remote system the _Primary private IP address_ is used as source IP instead of Virtual IP (_Secondary private IP address_).
-If there is requirement to use Virtual IP as the source IP, it could be achieved by mean of linux routing (for example see [Multiple IP source on single interface in Linux](https://unix.stackexchange.com/a/201752) )
+If there is requirement to use Virtual IP as the source IP, it could be achieved by means of linux routing (for example see [Multiple IP source on single interface in Linux](https://unix.stackexchange.com/a/201752) )
 
 ## AWS: High Availability
 
