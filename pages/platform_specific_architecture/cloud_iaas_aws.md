@@ -2,19 +2,17 @@
 
 Description
 
-<!-- TOC -->
-
 - [Platform Specific Architecture for AWS (Amazon Web Services)](#platform-specific-architecture-for-aws-amazon-web-services)
   - [AWS: Overall Architecture](#aws-overall-architecture)
   - [AWS: Basic Architecture](#aws-basic-architecture)
     - [AWS: Storage Configurations](#aws-storage-configurations)
   - [AWS: Virtual Hostname/IP](#aws-virtual-hostnameip)
+    - [Generic implementation steps](#generic-implementation-steps)
+    - [Additional comments](#additional-comments)
   - [AWS: High Availability](#aws-high-availability)
   - [AWS: Disaster Recovery](#aws-disaster-recovery)
   - [AWS: Data Tiering Options](#aws-data-tiering-options)
   - [AWS: XSA](#aws-xsa)
-
-<!-- /TOC -->
 
 ## AWS: Overall Architecture
 
@@ -41,8 +39,29 @@ Link to generic content: [Module: Basic Architecture](pages/generic_architecture
 
 Link to generic content: [Module: Virtual Hostname/IP](pages/generic_architecture/module_virtual_hostname.md#module-virtual-hostnameip)
 
-- how to implement virtual IP - maybe additional elastic network interface?
-- reference to Instance Move and how to execute AWS specific steps (move elastic network interface?)
+This chapter describes recommended implementation of Virtual Hostname and Virtual IP for an SAP HANA installation on the AWS cloud.
+
+The implementation is based on assigning a _Secondary private IP address_ to an existing network interface of the AWS instance. A _Secondary private IP address_ can be easily reassigned to another AWS instance and so it can follow SAP HANA instance relocation. For more details see [AWS: Multiple IP Addresses](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/MultipleIP.html). This _Secondary private IP address_ is associated with the Virtual Hostname which is used during SAP HANA instance installation.
+
+### Generic implementation steps 
+
+- define Virtual IP (in the same subnet as the network interface) and Virtual Hostname for SAP HANA Instance
+- assign _Virtual IP_ as _Secondary private IP address_ to existing network interface (see [AWS: assign secondary private IP](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/MultipleIP.html#assignIP-existing))
+- configure OS to use _Virtual IP Address_ (e.g. [SUSE: Administration Guide - Configuring Multiple Addresses](https://documentation.suse.com/sles/12-SP4/single-html/SLES-admin/index.html#sec-basicnet-yast-configure-addresses))
+- make Virtual Hostname resolvable (e.g. updating `/etc/hosts`)
+- install SAP HANA instance with the _Virtual Hostname_ (see [SAP: Administration Guide - Default Host Names and Virtual Host Names](https://help.sap.com/viewer/6b94445c94ae495c83a19646e7c3fd56/2.0.04/en-US/aa7e697ccf214852a283a75126c34370.html))
+
+### Additional comments
+
+**SAP HANA inbound network communication**
+
+A network communication initiated from a remote system to the Virtual IP of SAP HANA instance is established and takes place between remote system IP and the Virtual IP (_Secondary private IP address_). 
+The _Primary private IP address_ on the same interface is not involved in this communication.
+
+**SAP HANA outbound network communication**
+
+In contrast to an inbound connection, when SAP HANA instance initiates a network connection to a remote system the _Primary private IP address_ is used as source IP instead of Virtual IP (_Secondary private IP address_).
+If there is requirement to use Virtual IP as the source IP, it could be achieved by mean of linux routing (for example see [Multiple IP source on single interface in Linux](https://unix.stackexchange.com/a/201752) )
 
 ## AWS: High Availability
 
