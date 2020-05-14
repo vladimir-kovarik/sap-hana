@@ -51,6 +51,8 @@ The implementation is based on assigning a _Secondary private IP address_ to an 
 - make Virtual Hostname resolvable (e.g. updating `/etc/hosts`)
 - install SAP HANA instance with the _Virtual Hostname_ (see [SAP: Administration Guide - Default Host Names and Virtual Host Names](https://help.sap.com/viewer/6b94445c94ae495c83a19646e7c3fd56/2.0.04/en-US/aa7e697ccf214852a283a75126c34370.html))
 
+**Note:** _Virtual IP_ can be be reassigned to another AWS instance thanks to option "_Allow reassignment_" of the network interface (see [AWS: assign a secondary private IPv4 address](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/MultipleIP.html#assignIP-existing))
+
 ### Additional comments
 
 **SAP HANA inbound network communication**
