@@ -1,5 +1,9 @@
 # Change Log
 
+## 2020-04-23
+
+- [Vladimir Kovarik] Updated sections _AWS: Virtual Hostname/IP_ in `pages/platform_specific_architecture/cloud_iaas_aws.md`
+
 ## 2019-12-19
 
 - [Tomas Krojzl] Written initial content for following sections (Ready for Review):
